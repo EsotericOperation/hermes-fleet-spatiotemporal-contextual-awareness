@@ -41,7 +41,7 @@ def _load_config(cfg: Any = None) -> dict:
             from hermes_cli.config import load_config
             cfg = load_config() or {}
         except Exception:
-            return {}
+            cfg = {}
     
     agent = cfg.get("agent") or {}
     ta_cfg = agent.get("spatiotemporal_contextual_awareness") or agent.get("temporal_awareness") or {}
