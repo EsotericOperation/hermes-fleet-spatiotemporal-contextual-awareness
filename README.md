@@ -1,4 +1,4 @@
-# Spatiotemporal Contextual Awareness Plugin for Hermes Agent
+# Fleet Spatiotemporal Contextual Awareness Plugin for Hermes Agent
 
 > Know when you've been gone, where you were, and what you're bringing with you.
 
@@ -85,8 +85,8 @@ It stays silent during rapid back-and-forth to avoid wasting tokens.
 ## Install
 
 ```bash
-git clone https://github.com/EsotericOperation/hermes-spatiotemporal-contextual-awareness.git \
-  ~/.hermes/plugins/spatiotemporal_contextual_awareness
+git clone https://github.com/EsotericOperation/hermes-fleet-spatiotemporal-contextual-awareness.git \
+  ~/.hermes/plugins/fleet_spatiotemporal_contextual_awareness
 hermes gateway restart
 ```
 
@@ -96,7 +96,7 @@ In `~/.hermes/config.yaml`:
 
 ```yaml
 agent:
-  spatiotemporal_contextual_awareness:
+  fleet_spatiotemporal_contextual_awareness:
     enabled: true                # default: true
     threshold_minutes: 30        # silence before context injection
     night_shift_start: 22        # hour (24h) for night shift start
@@ -119,11 +119,11 @@ For quick config overrides:
 
 If you had `temporal_awareness` in your config, the plugin will still find it via the `agent.temporal_awareness` fallback path. To migrate:
 
-1. Rename the directory: `mv ~/.hermes/plugins/temporal_awareness ~/.hermes/plugins/spatiotemporal_contextual_awareness`
-2. Add to `plugins.enabled`: `- spatiotemporal-contextual-awareness`
-3. (Optional) Rename the config key from `temporal_awareness` to `spatiotemporal_contextual_awareness`
+1. Rename the directory: `mv ~/.hermes/plugins/temporal_awareness ~/.hermes/plugins/fleet_spatiotemporal_contextual_awareness`
+2. Add to `plugins.enabled`: `- fleet-spatiotemporal-contextual-awareness`
+3. (Optional) Rename the config key from `temporal_awareness` to `fleet_spatiotemporal_contextual_awareness`
 
-The plugin checks `spatiotemporal_contextual_awareness` first, then falls back to `temporal_awareness` for backward compatibility.
+The plugin checks `fleet_spatiotemporal_contextual_awareness` first, then falls back to `spatiotemporal_contextual_awareness` and `temporal_awareness` for backward compatibility.
 
 ## Requirements
 
