@@ -4,7 +4,7 @@
 
 A Hermes plugin that injects time-of-day, session recency, and cross-platform context into your message before each LLM call. When you return to a session after a gap, Hermes greets you with awareness — how long you've been away, what time it is, whether you're in night-shift mode, and whether you're resuming from a different platform.
 
-**Version:** 1.1.0 — renamed from "Temporal Awareness" to reflect spatiotemporal + contextual dimensions.
+**Version:** 1.2.0 — added fleet awareness: inject fleet-wide SSH/node context on first turn and after long gaps.
 
 ## How it works
 
@@ -62,6 +62,25 @@ Cross-platform, below temporal threshold:
 ```
 Platform context: This session was started on Telegram. You are now resuming from Desktop.
 ```
+
+## Fleet Awareness
+
+The plugin also injects fleet-wide SSH/node context on the first turn of every session and after long gaps. This tells the agent that SSH key auth is configured and verified on all fleet nodes, so it can use `ssh <alias>` directly without re-verifying connectivity.
+
+Customize `FLEET_NODES` in `__init__.py` with your own node inventory:
+
+```python
+FLEET_NODES = [
+    {"name": "node1", "os": "Linux", "connection": "direct"},
+    {"name": "node2", "os": "Linux", "connection": "relayed"},
+]
+```
+
+Fleet context fires when:
+- First turn of a new session (always)
+- OR the user has been away longer than the configured threshold (same as temporal)
+
+It stays silent during rapid back-and-forth to avoid wasting tokens.
 
 ## Install
 

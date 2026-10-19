@@ -234,8 +234,13 @@ def on_pre_llm_call(
                 f"You are now resuming from {current_name}."
             )
     
+    # Fleet awareness — fires on first turn of a session OR after a long gap
+    fleet_part = ""
+    if is_first_turn or temporal_fires:
+        fleet_part = _fleet_context()
+
     # Neither condition met — return empty
-    if not temporal_fires and not platform_fires:
+    if not temporal_fires and not platform_fires and not fleet_part:
         return {"context": ""}
     
     # Temporal context (gap-based)
@@ -283,8 +288,35 @@ def on_pre_llm_call(
     # Platform context — appended after temporal (or standalone if no temporal)
     if platform_part:
         parts.append(platform_part)
-    
+
+    # Fleet awareness — always on first turn
+    if fleet_part:
+        parts.append(fleet_part)
+
     return {"context": " ".join(parts)}
+
+
+# --- Fleet Awareness ---
+# Inject fleet-wide SSH/node awareness on first turn and after long gaps.
+# Customize FLEET_NODES with your own node inventory.
+
+FLEET_NODES = [
+    {"name": "node1", "os": "Linux", "connection": "direct"},
+    {"name": "node2", "os": "Linux", "connection": "relayed"},
+    {"name": "node3", "os": "Linux", "connection": "direct"},
+]
+
+
+def _fleet_context() -> str:
+    """Generate fleet awareness context — injected on first turn and after long gaps."""
+    nodes = ", ".join(
+        f"{n['name']} ({n['connection']})" for n in FLEET_NODES
+    )
+    return (
+        f"Fleet awareness: SSH key auth is configured and verified on all fleet nodes: {nodes}. "
+        f"Use ssh <alias> directly. "
+        f"Do NOT re-verify SSH connectivity unless a command fails."
+    )
 
 
 # --- Registration ---
